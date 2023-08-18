@@ -1,0 +1,17 @@
+{
+  "name": "default-app-web-build",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "lit-dev": "vite -- --root=./web-ui/",
+    "lit-build": "vite build -- --root=./web-ui/",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lit": "^2.7.6"
+  },
+  "devDependencies": {
+    "vite": "^4.4.5"
+  }
+}
