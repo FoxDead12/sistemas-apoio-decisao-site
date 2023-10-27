@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "lit-dev": "vite -- --root=./web-ui/",
+    "lit-dev": "vite --host -- --root=./web-ui/",
     "lit-build": "vite build -- --root=./web-ui/",
     "preview": "vite preview"
   },
