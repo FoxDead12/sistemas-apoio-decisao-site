@@ -8,8 +8,7 @@ export class AppAbout extends LitElement {
       position: relative;
       display: flex;
       flex-direction: column;
-      padding: 0px 10%;
-      margin-top: 75px;
+      padding: 75px 10%;
     }
 
     @media only screen and (min-width: 2000px) {
@@ -106,9 +105,6 @@ export class AppAbout extends LitElement {
 
     @media only screen and (max-width: 820px) {
 
-      :host {
-        padding: 0px 12px;
-      }
 
       .row {
         margin-top: 32px;

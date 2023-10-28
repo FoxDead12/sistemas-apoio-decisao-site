@@ -4,6 +4,8 @@ import './app-hero'
 import './app-about'
 import './app-product'
 import './app-plans'
+import './app-contact'
+import './app-news-letter'
 
 export class AppLayout extends LitElement {
 
@@ -21,13 +23,22 @@ export class AppLayout extends LitElement {
 
   render () {
     return html `
-      <app-header></app-header>
+      <app-header .layout=${this}></app-header>
       <app-hero></app-hero>
-      <app-about></app-about>
-      <app-product></app-product>
-      <app-plans></app-plans>
+      <app-about id="about"></app-about>
+      <app-product id="product"></app-product>
+      <app-plans id="plans"></app-plans>
+      <app-news-letter></app-news-letter>
+      <app-contact id="contact"></app-contact>
     `
   }
 
+  scrollToItem (idItem) {
+    const elementToGo = this.shadowRoot.getElementById(idItem)
+    elementToGo.scrollIntoView(elementToGo)
+
+  elementToGo.style.scrollMargin = "75px"; // Set the desired margin
+  elementToGo.scrollIntoView();
+  }
 }
 window.customElements.define('app-layout', AppLayout)

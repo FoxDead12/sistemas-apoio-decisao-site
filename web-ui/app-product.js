@@ -4,7 +4,6 @@ export class AppProduct extends LitElement {
 
   static properties = {
     itemsMax: { type: Int8Array },
-    // currentRight: { type: Int8Array }
   }
 
   static styles = css `

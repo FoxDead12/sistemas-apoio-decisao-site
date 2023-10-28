@@ -2,6 +2,10 @@ import { LitElement, css, html } from 'lit'
 
 export class AppHeader extends LitElement {
 
+  static properties = {
+    layout: { type: LitElement }
+  }
+
   static styles = css `
     :host {
       width: 100%;
@@ -190,7 +194,6 @@ export class AppHeader extends LitElement {
   }
 
   firstUpdated () {
-
     window.app.addEventListener('scroll', (e) => {
       this.__headerAction(e)
     })
@@ -202,10 +205,10 @@ export class AppHeader extends LitElement {
         <h2></h2>
 
         <ul class="list" id="list">
-          <li>Sobre Nós</li>
-          <li>Produto</li>
-          <li>Planos</li>
-          <li>Contactos</li>
+          <li @click=${() => this.layout.scrollToItem('about')}>Sobre Nós</li>
+          <li @click=${() => this.layout.scrollToItem('product')}>Produto</li>
+          <li @click=${() => this.layout.scrollToItem('plans')}>Planos</li>
+          <li @click=${() => this.layout.scrollToItem('contact')}>Contactos</li>
         </ul>
 
         <span class="hamburger" @click=${this.__hamburguerAction}>
