@@ -27,6 +27,12 @@ export class AppNewsLetter extends LitElement {
       width: 600px;
     }
 
+    @media only screen and (max-width: 820px) {
+      .container {
+        width: 100%;
+      }
+    }
+
     .input-container {
       background: white;
       display: grid;
@@ -47,6 +53,15 @@ export class AppNewsLetter extends LitElement {
       font-size: 16px;
       font-weight: bold;
     }
+
+    @media only screen and (max-width: 820px) {
+      .input-container > input {
+        font-size: 14px;
+        padding-left: 20px;
+
+      }
+    }
+
 
     .input-container > input::placeholder {
       color: #0c2c68;
