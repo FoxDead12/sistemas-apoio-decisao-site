@@ -22,6 +22,7 @@ export class App extends LitElement {
 
   constructor() {
     super()
+    window.app = this
   }
 
   render() {

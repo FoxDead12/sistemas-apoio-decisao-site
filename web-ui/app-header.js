@@ -6,8 +6,7 @@ export class AppHeader extends LitElement {
     :host {
       width: 100%;
       z-index: 100;
-      position: absolute;
-      // background: rgba(238, 238, 238, 0.75);
+      position: fixed;
     }
 
     .container {
@@ -22,10 +21,24 @@ export class AppHeader extends LitElement {
       padding: 0px 10%;
     }
 
+    @media only screen and (min-width: 2000px) {
+      .container {
+        padding: 0px 20vw;
+      }
+    }
+
+    .container.active {
+      background: rgba(238, 238, 238, 0.95);
+    }
+
     .hamburger {
       display: none;
       fill: white;
       transition: 100ms all ease-in-out;
+    }
+
+    .container.active .hamburger{
+      fill: var(--secondary-color);
     }
 
     .hamburger > svg {
@@ -55,6 +68,10 @@ export class AppHeader extends LitElement {
       letter-spacing: 2px;
       text-transform: uppercase;
       margin: 0px;
+    }
+
+    .container.active h2{
+      color: var(--primary-color);
     }
 
     h2:before {
@@ -108,12 +125,19 @@ export class AppHeader extends LitElement {
       letter-spacing: 0px;
       font-weight: bold;
       cursor: pointer;
-
       transition: 300ms all ease-in-out;
+    }
+
+    .container.active li{
+      color: var(--primary-color);
     }
 
     .list > li:hover {
       color: var(--primary-color);
+    }
+
+    .container.active li:hover {
+      color: var(--secondary-color);
     }
 
     .list > li::before {
@@ -125,6 +149,10 @@ export class AppHeader extends LitElement {
       height: 2px;
       background-color: var(--primary-color);
       transition: 200ms;
+    }
+
+    .container.active li:hover::before {
+      background-color: var(--secondary-color);
     }
 
     .list > li:hover::before {
@@ -143,6 +171,10 @@ export class AppHeader extends LitElement {
         margin-top: 0px;
       }
 
+      .container.active li{
+        color: white;
+      }
+
       .list > li:hover {
         color: var(--secondary-color);
       }
@@ -157,9 +189,16 @@ export class AppHeader extends LitElement {
     super()
   }
 
+  firstUpdated () {
+
+    window.app.addEventListener('scroll', (e) => {
+      this.__headerAction(e)
+    })
+  }
+
   render () {
     return html `
-      <div class="container">
+      <div id="container" class="container">
         <h2></h2>
 
         <ul class="list" id="list">
@@ -176,7 +215,6 @@ export class AppHeader extends LitElement {
     `
   }
 
-
   __hamburguerAction () {
     console.log("click")
     const element = this.shadowRoot.getElementById('list')
@@ -185,6 +223,22 @@ export class AppHeader extends LitElement {
     } else {
       element.classList.add('active')
     }
+  }
+
+  __headerAction (e) {
+    const currentX = e.currentTarget.scrollTop;
+    const heightHeader = this.offsetHeight
+    const element = this.shadowRoot.getElementById('container')
+
+    if (currentX > heightHeader) {
+      if (!element.classList.contains('active')) {
+        element.classList.add('active')
+        console.log("ativo")
+      }
+    } else {
+      element.classList.remove('active')
+    }
+
   }
 }
 window.customElements.define('app-header', AppHeader)

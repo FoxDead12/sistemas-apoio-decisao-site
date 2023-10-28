@@ -3,10 +3,11 @@ import { LitElement, css, html } from 'lit'
 export class AppHero extends LitElement {
 
   static styles = css `
-
     .container {
       position: relative;
+      height: 100%;
     }
+
 
     img {
       position: relative;
@@ -21,6 +22,12 @@ export class AppHero extends LitElement {
       bottom: 20vh;
       left: 10%;
       width: 1000px;
+    }
+
+    @media only screen and (min-width: 2000px) {
+      .content {
+        left: 20vw;
+      }
     }
 
     .content > h1 {
@@ -94,7 +101,7 @@ export class AppHero extends LitElement {
 
     .button {
       background: white;
-      padding: 32px 64px;
+      padding: 28px 64px;
       border-radius: 50px;
       font-size: 32px;
       font-weight: bold;
@@ -149,11 +156,11 @@ export class AppHero extends LitElement {
 
 
         <div class="content">
-          <h1>Bem-vindo a Data Sync Relationships!</h1>
+          <h1>Bem-vindo a Data Sync Relationships_!</h1>
           <h2>O programa de Faturação e Gestão para empresas, com registo automático de despesas, realização de pagamentos e arquivo digital. </h2>
 
           <div class="buttons-container">
-            <div class="button primary">Explorar Funcionalidades</div>
+            <div class="button primary">Vem nos conhecer</div>
             <div class="button secondary">Ver Planos</div>
           </div>
 
