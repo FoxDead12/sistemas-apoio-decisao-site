@@ -24,6 +24,6 @@ class Register < Base
   post '/login' do
     result = hash_password_check(@result[:hash], '123')
     puts result
-    return result
+    result
   end
 end

@@ -21,11 +21,12 @@ class Base < Sinatra::Base
   end
 
   def hash_password (string)
-    return BCrypt::Password.create(string, cost: 12, salt: 'OLA').to_s
+    return BCrypt::Password.create(string, cost: 12, salt: 'OLA')
   end
 
   def hash_password_check (hash, password)
-    BCrypt::Password.new(hash) == password
+    password = BCrypt::Password.new(hash)
+    return hash === password
   end
 
 end

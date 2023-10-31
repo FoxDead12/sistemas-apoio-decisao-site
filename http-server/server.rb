@@ -9,8 +9,6 @@ set :public_folder, '../dist/'
 use Login
 use Register
 
-
-
 get '/*' do
   File.read(File.join('../dist', 'index.html'))
 end
