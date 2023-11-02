@@ -2,28 +2,25 @@ require_relative "../baser.rb"
 
 class Register < Base
   post '/register' do
-    # email = request.body[:email]
-    # password = request.body[:password]
+    exec_perform(true, lambda do
+      # Check if already exist user width email
+      count = DB.fetch <<-SQL
+        SELECT count(u.id) FROM public.users u WHERE u.email like '#{@data_request[:email]}';
+      SQL
 
-    # Check if already exist user width email
-    count = DB.fetch <<-SQL
-      SELECT count(u.id) FROM users u WHERE u.email like '#{@result[:email]}';
-    SQL
-
-    count.each do |row|
-      if (row[:count] != 0)
-        return error_response ({message: "Já existe um utilizador com este email."})
+      count.each do |row|
+        if (row[:count] != 0)
+          raise Exception.new "Já existe um utilizador com este email."
+        end
       end
-    end
 
-    password = hash_password(@request[:password])
+      password_hash = hash_password @data_request[:password]
 
-    return password
-  end
+      result = DB.fetch <<-SQL
+        INSERT INTO public.users (email, password_hash, name) VALUES ('#{@data_request[:email]}', '#{password_hash}', '#{@data_request[:name]}');
+      SQL
 
-  post '/login' do
-    result = hash_password_check(@result[:hash], '123')
-    puts result
-    result
+      token = generate_token (@data_request[:email])
+    end)
   end
 end

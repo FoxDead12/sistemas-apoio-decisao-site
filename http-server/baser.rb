@@ -1,18 +1,40 @@
 require "sinatra/base"
 require "sequel"
 require "json"
-require 'bcrypt'
-
+require "bcrypt"
+require "jwt"
+require "byebug"
 
 
 class Base < Sinatra::Base
   DB = Sequel.connect('postgres://sequel_user:123@localhost/sistemas_apoio_decisao')
+  SECRET = 'SECRET CODE'
 
   before do
     if (request.post?)
-      @result = JSON.parse(request.body.string)
-      @result = @result.transform_keys(&:to_sym)
+      request_body = JSON.parse(request.body.string)
+      @data_request = request_body.transform_keys(&:to_sym)
     end
+  end
+
+  def exec_perform (rolbar, block)
+    result = {}
+    begin
+
+      result = block.call
+
+    rescue StandardError => error # SERVER   ERROS
+      error_response({message: 'Ocorreu algum erro, tente de novo mais tarde!'}, 501)
+      puts error
+
+    rescue Exception => error # User ERROS
+      error_response({message: error})
+
+    rescue => error
+      puts error
+    end
+
+    return result
   end
 
   def error_response (data, status = 403)
@@ -20,13 +42,24 @@ class Base < Sinatra::Base
     data.to_json
   end
 
-  def hash_password (string)
-    return BCrypt::Password.create(string, cost: 12, salt: 'OLA')
+  def hash_password (password)
+    return BCrypt::Password.create(password)
   end
 
   def hash_password_check (hash, password)
-    password = BCrypt::Password.new(hash)
-    return hash === password
+    user_hash = BCrypt::Password.new(hash)
+    puts  user_hash, password, user_hash == password
+    if user_hash == password
+      # Password matches
+      puts "Password is correct"
+    else
+      # Password does not match
+      puts "Password is incorrect"
+    end
   end
 
+  def generate_token (email)
+    payload = {:email => email}
+    token = JWT.encode payload, SECRET, 'none'
+  end
 end
