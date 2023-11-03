@@ -18,23 +18,20 @@ class Base < Sinatra::Base
   end
 
   def exec_perform (rolbar, block)
-    result = {}
     begin
 
-      result = block.call
+      return block.call
 
     rescue StandardError => error # SERVER   ERROS
-      error_response({message: 'Ocorreu algum erro, tente de novo mais tarde!'}, 501)
       puts error
+      return error_response({message: 'Ocorreu algum erro, tente de novo mais tarde!'}, 501)
 
     rescue Exception => error # User ERROS
-      error_response({message: error})
-
+      puts error
+      return error_response({message: error})
     rescue => error
       puts error
     end
-
-    return result
   end
 
   def error_response (data, status = 403)

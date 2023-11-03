@@ -2,8 +2,7 @@ require_relative "../baser.rb"
 
 class Register < Base
   post '/register' do
-    exec_perform(true, lambda do
-      # Check if already exist user width email
+    exec_perform(false, lambda do
       count = DB.fetch <<-SQL
         SELECT count(u.id) FROM public.users u WHERE u.email like '#{@data_request[:email]}';
       SQL
@@ -15,10 +14,7 @@ class Register < Base
       end
 
       password_hash = hash_password @data_request[:password]
-
-      result = DB.fetch <<-SQL
-        INSERT INTO public.users (email, password_hash, name) VALUES ('#{@data_request[:email]}', '#{password_hash}', '#{@data_request[:name]}');
-      SQL
+      DB[:users].insert(email: @data_request[:email], name: @data_request[:name], password_hash: password_hash)
 
       token = generate_token (@data_request[:email])
     end)
