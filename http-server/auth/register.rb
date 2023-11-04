@@ -9,14 +9,14 @@ class Register < Base
 
       count.each do |row|
         if (row[:count] != 0)
-          raise Exception.new "Já existe um utilizador com este email."
+          raise Exception.new "Já existe um utilizador com este email"
         end
       end
 
       password_hash = hash_password @data_request[:password]
       DB[:users].insert(email: @data_request[:email], name: @data_request[:name], password_hash: password_hash)
 
-      token = generate_token (@data_request[:email])
+      return
     end)
   end
 end

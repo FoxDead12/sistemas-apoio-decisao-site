@@ -15,6 +15,10 @@ class Base < Sinatra::Base
       request_body = JSON.parse(request.body.string)
       @data_request = request_body.transform_keys(&:to_sym)
     end
+
+    if (request.get?)
+      @data_request = params.transform_keys(&:to_sym)
+    end
   end
 
   def exec_perform (rolbar, block)
@@ -45,18 +49,23 @@ class Base < Sinatra::Base
 
   def hash_password_check (hash, password)
     user_hash = BCrypt::Password.new(hash)
-    puts  user_hash, password, user_hash == password
-    if user_hash == password
-      # Password matches
-      puts "Password is correct"
-    else
-      # Password does not match
-      puts "Password is incorrect"
-    end
+    return user_hash == password
   end
 
-  def generate_token (email)
-    payload = {:email => email}
-    token = JWT.encode payload, SECRET, 'none'
+  def generate_token (email, user_id)
+    payload = {:email => email, :id => user_id}
+    expiration_time = Time.now.to_i + 3600
+    token = JWT.encode payload, SECRET, 'HS256', exp: expiration_time
+  end
+
+  def decode_token (token)
+    data = JWT.decode token, SECRET, false
+    token_expiration = data[1]["exp"]
+
+    if (token_expiration < Time.now.to_i)
+      raise Exception.new "Seu token expirou!"
+    end
+
+    user_info = data[0].transform_keys(&:to_sym)
   end
 end

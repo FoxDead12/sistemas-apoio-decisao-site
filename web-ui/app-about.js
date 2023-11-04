@@ -13,7 +13,7 @@ export class AppAbout extends LitElement {
 
     @media only screen and (min-width: 2000px) {
       :host {
-        padding: 0px 20vw;
+        padding: 75px 20vw;
       }
     }
 
