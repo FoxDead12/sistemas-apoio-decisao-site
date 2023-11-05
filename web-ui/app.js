@@ -34,7 +34,6 @@ export class App extends LitElement {
     window.addEventListener("popstate", function (event) {
       window.app.requestUpdate()
     });
-
   }
 
   render() {
@@ -58,6 +57,11 @@ export class App extends LitElement {
         return html `<app-dashboard></app-dashboard>`
         break;
     }
+  }
+
+  changeRoute (string) {
+    window.history.pushState("", "", string)
+    this.requestUpdate()
   }
 }
 window.customElements.define('app-component', App)

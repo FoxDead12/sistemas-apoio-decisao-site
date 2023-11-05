@@ -309,9 +309,9 @@ export class AppLogin extends LitElement {
         // SUCCESS
         const data = await result.json()
         this.shadowRoot.getElementById('button').classList.add('success')
-        localStorage.setItem("token", data.token);
         window.app.sessionData.token = data.token
-        window.history.pushState("", "", "/dashboard")
+        localStorage.setItem("token", data.token);
+        window.app.changeRoute('/dashboard')
       } else {
         // ERROR
         const data = await result.json()
@@ -323,15 +323,14 @@ export class AppLogin extends LitElement {
         }, 1300)
       }
     } catch (e) {
-      console.log (e)
-      this.shadowRoot.getElementById('error').innerHTML = 'Ocorreu algum problema a conectar com o servidor, tente de novo!'
+      console.error (e)
+        this.shadowRoot.getElementById('error').innerHTML = 'Ocorreu algum problema a conectar com o servidor, tente de novo!'
         this.shadowRoot.getElementById('error').classList.add('active')
         setTimeout(() => {
           this.shadowRoot.getElementById('error').classList.remove('active')
           this.shadowRoot.getElementById('error').innerHTML = ''
         }, 1300)
     }
-
 
     this.loading = false
   }

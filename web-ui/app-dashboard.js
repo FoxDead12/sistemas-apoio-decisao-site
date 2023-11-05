@@ -7,6 +7,11 @@ export class AppDashboard extends LitElement {
   }
 
   static styles = css `
+    .header {
+      padding: 16px;
+      background: var(--primary-color);
+      box-shadow: 0 2px 50px rgba(50, 40, 85, 0.2);
+    }
   `
 
   constructor () {
@@ -15,16 +20,19 @@ export class AppDashboard extends LitElement {
 
     if (window.app.sessionData.token == null) {
       window.location.href = '/'; //relative to domain
-    } else {
-      this.validate ()
     }
+
+    this.validate ()
+
   }
 
   render () {
     if (this.loading == true) return
 
     return html `
-      <h1>${window.app.sessionData.name}</h1>
+      <div class="header">
+        <h5>${window.app.sessionData.name}</h5>
+      </div>
     `
   }
 
