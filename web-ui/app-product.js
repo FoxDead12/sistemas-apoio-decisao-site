@@ -235,42 +235,10 @@ export class AppProduct extends LitElement {
   }
 
   firstUpdated () {
-    window.addEventListener('load', (e) => {
-      this.itemsMax = 2
-
-      if (e.currentTarget.innerWidth >= 2800) {
-        this.itemsMax = 3
-      }
-
-      if (e.currentTarget.innerWidth <= 1350) {
-        this.itemsMax = 1
-      }
-
-      if (e.currentTarget.innerWidth <= 850) {
-        this.itemsMax = 0
-      }
-
-      this.currentLeft = 0
-      this.currentRight = this.itemsMax
-    })
+    this.__resizeList()
 
     window.addEventListener('resize', (e) => {
-      this.itemsMax = 2
-
-      if (e.currentTarget.innerWidth >= 2800) {
-        this.itemsMax = 3
-      }
-
-      if (e.currentTarget.innerWidth <= 1350) {
-        this.itemsMax = 1
-      }
-
-      if (e.currentTarget.innerWidth <= 850) {
-        this.itemsMax = 0
-      }
-
-      this.currentLeft = 0
-      this.currentRight = this.itemsMax
+      this.__resizeList (e)
     });
   }
 
@@ -346,6 +314,25 @@ export class AppProduct extends LitElement {
     this.currentRight++
     const elementToShow = this.shadowRoot.getElementById('card_' + this.currentRight)
     elementToShow.classList.remove('hidden')
+  }
+
+  __resizeList (e) {
+    this.itemsMax = 2
+
+    if (window.innerWidth >= 2800) {
+      this.itemsMax = 3
+    }
+
+    if (window.innerWidth <= 1350) {
+      this.itemsMax = 1
+    }
+
+    if (window.innerWidth <= 850) {
+      this.itemsMax = 0
+    }
+
+    this.currentLeft = 0
+    this.currentRight = this.itemsMax
   }
 }
 window.customElements.define('app-product', AppProduct)
