@@ -53,7 +53,7 @@ export class AppHeader extends LitElement {
       transform: scale(0.8);
     }
 
-    @media only screen and (max-width: 820px) {
+    @media only screen and (max-width: 980px) {
       .container {
         grid-template-columns: auto 30px;
         grid-gap: 8px;
@@ -76,18 +76,19 @@ export class AppHeader extends LitElement {
     .list {
       display: flex;
       justify-content: end;
+      align-items: center;
       list-style: none;
       padding: 0px;
       margin: 0px;
     }
 
-    @media only screen and (max-width: 940px) {
+    @media only screen and (max-width: 1024px) {
       #logo {
         width: 90%;
       }
     }
 
-    @media only screen and (max-width: 820px) {
+    @media only screen and (max-width: 980px) {
 
       #logo {
         width: 90%;
@@ -97,6 +98,7 @@ export class AppHeader extends LitElement {
         position: absolute;
         display: flex;
         flex-direction: column;
+        align-items: start;
         height: auto;
         background: var(--primary-color);
         top: 75px;
@@ -157,7 +159,10 @@ export class AppHeader extends LitElement {
       width: 100%;
     }
 
-    @media only screen and (max-width: 820px) {
+    .list > .login-item {
+    }
+
+    @media only screen and (max-width: 980px) {
       .list > li {
         margin-right: 0px;
         margin-top: 20px;
@@ -203,6 +208,7 @@ export class AppHeader extends LitElement {
           <li @click=${() => this.layout.scrollToItem('product')}>Produto</li>
           <li @click=${() => this.layout.scrollToItem('plans')}>Planos</li>
           <li @click=${() => this.layout.scrollToItem('contact')}>Contactos</li>
+          <li class="login-item" @click=${() => window.app.changeRoute('/login')}>Login</li>
         </ul>
 
         <span class="hamburger" @click=${this.__hamburguerAction}>
