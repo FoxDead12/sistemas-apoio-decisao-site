@@ -12,3 +12,4 @@ gem "bcrypt"
 gem "jwt"
 gem "byebug"
 gem "rack-cors"
+gem 'axlsx'

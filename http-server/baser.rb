@@ -27,6 +27,7 @@ class Base < Sinatra::Base
       return block.call
 
     rescue StandardError => error # SERVER   ERROS
+      # puts error.backtrace
       puts error
       return error_response({message: 'Ocorreu algum erro, tente de novo mais tarde!'}, 501)
 
