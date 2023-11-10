@@ -1,9 +1,11 @@
-import { LitElement, css, html } from 'lit'
+import { LitElement, css, html, render } from 'lit'
 
 export class AppDashboard extends LitElement {
 
   static properties = {
-    loading: { type: Boolean }
+    loading: { type: Boolean },
+    data: { type: Object },
+    download: { type: Boolean }
   }
 
   static styles = css `
@@ -67,6 +69,7 @@ export class AppDashboard extends LitElement {
     }
 
     section {
+      position: relative;
       display: flex;
       margin: 0px;
       width: 100%;
@@ -83,6 +86,7 @@ export class AppDashboard extends LitElement {
     }
 
     .bottom-tab {
+      z-index: 2;
       background: white;
       padding: 12px 16px;
       box-shadow: 0 2px 10px rgba(50, 40, 85, 0.2);
@@ -104,11 +108,59 @@ export class AppDashboard extends LitElement {
       color: white;
       box-shadow: 0 2px 2px rgba(50, 40, 85, 0.2);
     }
+
+    .container-success {
+      position: absolute;
+      background: white;
+      width: 100%;
+      height: 100%;
+      right: 0px;
+    }
+
+    .container-success > h5 {
+      font-family: 'Montserrat';
+      font-size: 32px;
+      text-transform: uppercase;
+      color: var(--primary-color);
+      letter-spacing: 1px;
+      text-align: center;
+      margin: 0px;
+      padding: 32px 0px;
+    }
+
+    .container-success > a {
+      display: flex;
+      justify-content: center;
+      margin-top: 32px;
+    }
+
+    .container-success > a > svg {
+      stroke: white;
+      background: var(--primary-color);
+      border-radius: 50%;
+      padding: 12px;
+    }
+
+
+    .container-success > p {
+      font-family: 'Montserrat';
+      font-size: 16px;
+      color: #333;
+      text-align: center;
+      margin-top: 32px;
+    }
   `
 
   constructor () {
     super ()
+
     this.loading = true
+
+    this.download = false
+
+    this.indexMenu = 0
+
+    this.data = {}
 
     if (window.app.sessionData.token == null) {
       window.location.href = '/'; //relative to domain
@@ -119,6 +171,7 @@ export class AppDashboard extends LitElement {
     await this.validate ()
 
     this._renderMenu()
+    this.__setMenu()
   }
 
   render () {
@@ -127,22 +180,34 @@ export class AppDashboard extends LitElement {
     return html `
       <div class="container">
         <ul class="header">
-          <li name="menu" menu="0" @click=${this._changeMenu} class="active">Criterios</li>
-          <li name="menu" menu="1" @click=${this._changeMenu}>Custos Criterios</li>
-          <li name="menu" menu="2" @click=${this._changeMenu}>Items</li>
+          <li name="menu" menu="0" @click=${this.__changeMenu}>Criterios</li>
+          <li name="menu" menu="1" @click=${this.__changeMenu}>Custos Criterios</li>
+          <li name="menu" menu="2" @click=${this.__changeMenu}>Items</li>
         </ul>
 
         <section id="section">
+          ${this.download == true ? html `
+            <div class="container-success">
+              <h5>Ficheiro gerado!</h5>
+              <a href="${this.url}">
+              <svg width="150px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" /></svg>
+              </a>
+
+              <p>
+              Click no icon acima para baixar o ficheiro que foi gerado!
+              </p>
+            </div>
+          ` : ''}
         </section>
 
         <div class="bottom-tab">
-          <span @click=${() => this.__buttonsChangeMenu(false)} class="button">
+          <span action="left" @click=${this.__changeMenu} class="button">
             <svg width="25px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
               <path fill-rule="evenodd" d="M11.03 3.97a.75.75 0 010 1.06l-6.22 6.22H21a.75.75 0 010 1.5H4.81l6.22 6.22a.75.75 0 11-1.06 1.06l-7.5-7.5a.75.75 0 010-1.06l7.5-7.5a.75.75 0 011.06 0z" clip-rule="evenodd" />
             </svg>
           </span>
 
-          <span @click=${this.__buttonsChangeMenu} class="button">
+          <span action="right" @click=${this.__changeMenu} class="button">
             <svg width="25px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
               <path fill-rule="evenodd" d="M12.97 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06l6.22-6.22H3a.75.75 0 010-1.5h16.19l-6.22-6.22a.75.75 0 010-1.06z" clip-rule="evenodd" />
             </svg>
@@ -172,60 +237,56 @@ export class AppDashboard extends LitElement {
     this.loading = false
   }
 
-  // TODO REVIEW MENUS SYSTEM
-  _changeMenu (e, index) {
-    if (!e?.currentTarget && !index) return
+  __changeMenu (e) {
+    try {
+      const element = e.currentTarget
+      const oldIndex = this.indexMenu
+      switch (element.getAttribute('action')) {
+        case 'left':
+          if (this.indexMenu - 1 >= 0) {
+            this.indexMenu -= 1
+          }
+          break
+        case 'right':
+          if (this.indexMenu + 1 <= this.maxIndex) {
+            this.indexMenu += 1
+          }
+          break
+        default:
+          this.indexMenu = Number(element.getAttribute('menu'))
+      }
 
-    let menuIndex = 0
-    if (e?.currentTarget) {
-      menuIndex = Number(e.currentTarget.getAttribute('menu'))
-    } else {
-      menuIndex = index
+      try {
+        const result = this.elementMenus[oldIndex].save()
+        this.data = Object.assign({}, this.data, result)
+        this.elementMenus[this.indexMenu].data = this.data // UPDATE COMPONENTE ATRIBUTE
+      } catch (e) {
+        console.log(e)
+      }
+
+      this.__setMenu()
+
+      if (oldIndex == 2) {
+        this.__validate()
+
+        this.__executeJob()
+      }
+    } catch (e) {
+      console.error(e)
     }
+  }
 
-
-    // CHANGE MENU ACTIVE
+  __setMenu () {
     const menusItems = this.shadowRoot.querySelectorAll('li[name="menu"]')
     menusItems.forEach(item => {
       item.classList.remove('active')
 
-      if (menuIndex === Number(item.getAttribute('menu'))) {
+      if (this.indexMenu === Number(item.getAttribute('menu'))) {
         item.classList.add('active')
       }
     })
 
-    this.shadowRoot.getElementById('section').scrollLeft = menuIndex * this.shadowRoot.getElementById('section').offsetWidth
-  }
-
-  __buttonsChangeMenu (right = true) {
-    let index = 0
-    const menusItems = this.shadowRoot.querySelectorAll('li[name="menu"]')
-
-    menusItems.forEach((item, idx) => {
-
-      if (item.classList.contains('active')) {
-        index = idx
-      }
-
-      item.classList.remove('active')
-    })
-
-    if (right) {
-      if (menusItems[index + 1]) {
-        index = index + 1
-      } else {
-        index = 0
-      }
-    } else {
-      if (menusItems[index - 1]) {
-        index = index - 1
-      } else {
-        index = menusItems.length - 1
-      }
-    }
-    console.log(index)
-
-    this._changeMenu(null, index)
+    this.shadowRoot.getElementById('section').scrollLeft = this.indexMenu * this.shadowRoot.getElementById('section').offsetWidth
   }
 
   _renderMenu () {
@@ -235,19 +296,61 @@ export class AppDashboard extends LitElement {
       './algorithm/items-form.js'
     ]
 
-    menus.forEach(async menu => {
-      import (menu)
+    this.maxIndex = menus.length - 1
+    this.elementMenus = []
 
+    import ('./algorithm/criteria-form.js')
+    import ('./algorithm/criteria-costs-form.js')
+    import ('./algorithm/items-form.js')
+
+    menus.forEach(async menu => {
       const array = menu.split('/')
       const elementName = array[array.length - 1].replace('.js', '')
 
+      const element = document.createElement(elementName)
+      element.data = this.data
+      this.elementMenus.push(element)
+
+
       const div = document.createElement('div')
       div.classList.add("container-section_menu")
-      const element = document.createElement(elementName)
-
-      div.appendChild(element)
       this.shadowRoot.getElementById('section').appendChild(div)
+      render(element ,div)
+
     })
+  }
+
+  __validate () {
+    if ((this.data.hasOwnProperty('cost') && this.data.hasOwnProperty('items') && this.data.hasOwnProperty('criteria')) == false) {
+      throw 'Preencha todos os campos'
+    }
+
+    if ((this.data.cost.length <= 0 && this.data.items.length <= 0 && this.data.criteria.length <= 0) == true) {
+      throw 'Preencha todos os campos'
+    }
+  }
+
+  async __executeJob () {
+
+    try {
+
+      const result = await fetch(window.app.originUrl + '/algorithm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${window.app.sessionData.token}`
+        },
+        body: JSON.stringify(this.data)
+      })
+
+      const file = await result.json()
+      const url = window.app.originUrl + '/excel/' + file.file
+      this.shadowRoot.getElementById('section').scrollLeft = 0
+      this.url = url
+      this.download = true
+    } catch (e) {
+      console.error(e)
+    }
   }
 }
 window.customElements.define('app-dashboard', AppDashboard)

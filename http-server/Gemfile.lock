@@ -1,21 +1,32 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    axlsx (2.0.1)
+      htmlentities (~> 4.3.1)
+      nokogiri (>= 1.4.1)
+      rubyzip (~> 1.0.0)
     bcrypt (3.1.19)
     byebug (11.1.3)
+    htmlentities (4.3.4)
     json (2.6.3)
     jwt (2.7.1)
+    mini_portile2 (2.8.5)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
     nio4r (2.5.9)
+    nokogiri (1.15.4)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     puma (6.3.0)
       nio4r (~> 2.0)
+    racc (1.7.3)
     rack (2.2.8)
     rack-cors (2.0.1)
       rack (>= 2.0.0)
     rack-protection (3.1.0)
       rack (~> 2.2, >= 2.2.4)
     ruby2_keywords (0.0.5)
+    rubyzip (1.0.0)
     sequel (5.71.0)
     sinatra (3.1.0)
       mustermann (~> 3.0)
@@ -28,6 +39,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  axlsx
   bcrypt
   byebug
   json
