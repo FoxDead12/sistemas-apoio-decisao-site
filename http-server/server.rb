@@ -26,6 +26,7 @@ use Register
 use Algorithm
 
 get '/excel/:name' do
+  # TODO, BLOCK OU FROM tmp FILE
   name = params[:name]
   send_file "../tmp/#{name}", :filename => name, :type => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', disposition: 'attachment'
 end
