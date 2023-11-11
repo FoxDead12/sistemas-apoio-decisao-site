@@ -4,6 +4,8 @@ require_relative "../baser.rb"
 class Algorithm < Base
   post '/algorithm' do
     exec_perform(false, lambda do
+      validateUser # METHOD TO VALIDATE USER
+
       # FIRST, CALCULATE (SUM), of each column
       sum_cost = Array.new # SUM EXAMPLES [1, 4.2, 5.4] [(PRECO), (DESEMPENHO), [ETC]], each column in horizontal
       (0..@data_request[:cost].length - 1).step(1).each do |column_i|

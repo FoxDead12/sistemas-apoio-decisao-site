@@ -18,6 +18,10 @@ class Base < Sinatra::Base
     if (request.get?)
       @data_request = params.transform_keys(&:to_sym)
     end
+
+    if (!request.env['HTTP_AUTHORIZATION'].nil?)
+      @data_request[:token] = request.env.fetch('HTTP_AUTHORIZATION').slice(7..-1)
+    end
   end
 
   def exec_perform (rolbar, block)
@@ -59,17 +63,39 @@ class Base < Sinatra::Base
   end
 
   def decode_token (token)
-    data = JWT.decode token, SECRET, false
-    token_expiration = data[1]["exp"]
+    begin
+      data = JWT.decode token, SECRET, false
+      token_expiration = data[1]["exp"]
 
-    if (token_expiration < Time.now.to_i)
-      raise Exception.new "Seu token expirou!"
+      if (token_expiration < Time.now.to_i)
+        raise Exception.new "Seu token expirou!"
+      end
+
+      user_info = data[0].transform_keys(&:to_sym)
+      return user_info
+    rescue => e
+      raise Exception.new "Token invalido!"
     end
-
-    user_info = data[0].transform_keys(&:to_sym)
   end
 
   def validateUser ()
+    token = @data_request[:token]
+    if (token.nil?)
+      raise Exception.new "Token invalido!"
+    end
 
+    user_info = decode_token(token)
+
+    user = nil
+    result_user = DB[:users].select(:id).where(id: user_info[:id]).limit(1)
+    result_user.each do |row|
+      user = row
+    end
+
+    if (user.nil?)
+      raise Exception.new "User invalido!"
+    end
+
+    return user
   end
 end

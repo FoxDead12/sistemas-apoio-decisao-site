@@ -487,6 +487,11 @@ export class AppForm extends LitElement {
         body: JSON.stringify(this.wizard)
       })
 
+      if (result.status !== 200) {
+        const data = await result.json()
+        throw data.message
+      }
+
       const file = await result.json()
       const url = window.app.originUrl + '/excel/' + file.file
 
