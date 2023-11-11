@@ -20,7 +20,7 @@ class Base < Sinatra::Base
     end
   end
 
-  def exec_perform (rolbar block)
+  def exec_perform (rolbar, block)
     begin
 
       return block.call
