@@ -4,11 +4,6 @@ require_relative "../baser.rb"
 class Algorithm < Base
   post '/algorithm' do
     exec_perform(false, lambda do
-      # [
-        #   [1, 5, 2, 9],  LINHA 1 (PRECO)
-        #   [0.2, 1, 0.5 ,3], LINHA 2 (DESEMPENHO)
-        # ]
-
       # FIRST, CALCULATE (SUM), of each column
       sum_cost = Array.new # SUM EXAMPLES [1, 4.2, 5.4] [(PRECO), (DESEMPENHO), [ETC]], each column in horizontal
       (0..@data_request[:cost].length - 1).step(1).each do |column_i|
@@ -41,11 +36,6 @@ class Algorithm < Base
       end
 
       # FOUR AND LAST, calculate the matrix
-      # sum_weight_props = [
-      #   123, PRECO
-      #   2.345, QUANTIDADE
-      #   55645, SEILA
-      # ]
       matrizJuz = Array.new
       @data_request[:items].each_with_index do |row, row_i|
         matrizJuz << Array.new

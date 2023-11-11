@@ -5,7 +5,6 @@ require "bcrypt"
 require "jwt"
 require "byebug"
 
-
 class Base < Sinatra::Base
   DB = Sequel.connect('postgres://sequel_user:123@localhost/sistemas_apoio_decisao')
   SECRET = 'SECRET CODE'
@@ -21,7 +20,7 @@ class Base < Sinatra::Base
     end
   end
 
-  def exec_perform (rolbar, block)
+  def exec_perform (rolbar block)
     begin
 
       return block.call
@@ -68,5 +67,9 @@ class Base < Sinatra::Base
     end
 
     user_info = data[0].transform_keys(&:to_sym)
+  end
+
+  def validateUser ()
+
   end
 end
