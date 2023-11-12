@@ -31,7 +31,7 @@ export class AppForm extends LitElement {
       height: 550px;
       box-shadow: 0 2px 50px rgba(50, 40, 85, 0.2);
       overflow: hidden;
-      border-radius: 5px;
+      border-radius: 5px 0px 5px 5px;
       display: grid;
       grid-auto-rows: auto 1fr 55px;
     }
@@ -298,6 +298,70 @@ export class AppForm extends LitElement {
       font-size: 12px;
       font-style: italic;
     }
+
+    .info {
+      z-index: 1;
+      overflow: hidden;
+      background: white;
+      border-radius: 5px;
+      position: absolute;
+      box-shadow: 0 2px 50px rgba(50, 40, 85, 0.3);
+      position: absolute;
+      width: 250px;
+      height: 0px;
+      left: 0px;
+      bottom: 55px;
+      transition: 200ms all ease-in-out;
+    }
+
+    .info.active {
+      height: 250px;
+    }
+
+    .info > h5 {
+      font-family: 'Montserrat';
+      margin: 0px;
+      background: var(--primary-color);
+      color: white;
+      padding: 12px;
+      font-size: 18px;
+      font-weight: normal;
+    }
+
+    .info > p {
+      padding: 24px 12px;
+      margin: 0px;
+      font-family: 'Montserrat';
+      color: #333;
+      font-size: 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .info > ul {
+      list-style: none;
+      padding: 0px 12px;
+      margin: 0px 0px;
+    }
+
+    .info > ul > li {
+      font-family: 'Montserrat';
+      color: #333;
+      margin: 24px 0px;
+    }
+
+    .info-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--primary-color);
+      border-radius: 50%;
+      left: 12px;
+      position: absolute;
+    }
+
+    .info-button > svg {
+      stroke: white;
+    }
   `
 
   constructor () {
@@ -347,6 +411,18 @@ export class AppForm extends LitElement {
           </div>
 
           <div class="buttons-container">
+            <span class="info-button" @mouseleave=${() => this.shadowRoot.getElementById('hover').classList.remove('active')} @mouseenter=${() => this.shadowRoot.getElementById('hover').classList.add('active')}>
+              <div class="info" id="hover">
+                <h5>Importante saber:</h5>
+                <p>Os valores que deve inserir são entre 1 e 9</p>
+                <ul>
+                  <li>1 - Menos Relevante / Pior</li>
+                  <li>9 - Relevante / Melhor</li>
+                </ul>
+              </div>
+              <svg width="44" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+            </span>
+
             <span @click=${this.__leftClick} class="button">
               <svg width="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
             </span>
@@ -455,7 +531,6 @@ export class AppForm extends LitElement {
   }
 
   __validatePage () {
-
     const div = this.pagesContainer.children[this.currentPage]
     const page = div.children[0]
     page.validate()
