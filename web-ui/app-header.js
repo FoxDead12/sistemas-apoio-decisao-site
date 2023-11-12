@@ -219,7 +219,6 @@ export class AppHeader extends LitElement {
   }
 
   __hamburguerAction () {
-    console.log("click")
     const element = this.shadowRoot.getElementById('list')
     if (element.classList.contains('active')) {
       element.classList.remove('active')
@@ -236,7 +235,6 @@ export class AppHeader extends LitElement {
     if (currentX > heightHeader) {
       if (!element.classList.contains('active')) {
         element.classList.add('active')
-        console.log("ativo")
       }
     } else {
       element.classList.remove('active')

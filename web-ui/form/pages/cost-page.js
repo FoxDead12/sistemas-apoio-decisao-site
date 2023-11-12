@@ -28,6 +28,39 @@ export class CostPage extends LitElement {
       color: var(--primary-color);
       background: #eee;
     }
+
+    .title {
+      background: #eee;
+      padding: 12px;
+      margin: 0px;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--primary-color);
+      border-radius: 3px;
+      font-family: 'Montserrat';
+      margin-bottom: 12px;
+    }
+
+    .title > span {
+      color: #333;
+      font-size: 12px;
+      font-style: italic;
+      font-weight: normal;
+      text-align: center;
+      text-transform: lowercase;
+      margin-top: 8px;
+    }
+
+    .row > input {
+      font-family: 'Montserrat';
+      font-size: 16px;
+      border: 0px;
+      padding: 0px;
+      outline: none;
+      border-bottom: 1px solid #d4d4d4;
+      padding-bottom: 4px;
+    }
   `
 
   constructor () {
@@ -46,6 +79,11 @@ export class CostPage extends LitElement {
   render () {
     if (this.loading == true) return
     return html `
+
+      <h5 class="title">Indique o peso do primeiro criterio sobre o segundo!<br>
+        <span>(Caso de duvida sobre os valores a inserir veja o botao de ajuda!)</span>
+      </h5>
+
       <div class="container">
         ${this.__loadQuestions()}
       </div>
@@ -106,7 +144,7 @@ export class CostPage extends LitElement {
       <div class="row">
         <span>${this.wizard.criteria[row].name}</span>
         <span>${this.wizard.criteria[column].name}</span>
-        <input maxLength="1" type="number" @change=${this.__change} .value=${this.wizard.cost[row][column]} row="${row}" column="${column}" />
+        <input type="number" @change=${this.__change} .value=${this.wizard.cost[row][column]} row="${row}" column="${column}" />
       </div>
     `
     })

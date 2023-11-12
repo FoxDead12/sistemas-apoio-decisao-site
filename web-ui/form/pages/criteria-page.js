@@ -38,6 +38,7 @@ export class CriteriaPage extends LitElement {
       cursor: pointer;
       padding: 0px;
       margin: 0px;
+      width: 170px;
     }
 
     .text-add > p > svg {

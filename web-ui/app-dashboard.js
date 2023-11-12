@@ -14,6 +14,11 @@ export class AppDashboard extends LitElement {
   }
 
   firstUpdated () {
+    this.shadowRoot.addEventListener('keydown', function(event) {
+      if (event.keyCode === 9 && event.target.tagName === 'APP-FORM') {
+        event.preventDefault();
+      }
+    });
   }
 
   render () {

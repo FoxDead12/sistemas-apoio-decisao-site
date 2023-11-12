@@ -21,6 +21,7 @@ export class ItemPage extends LitElement {
       padding: 0px;
       margin: 0px;
       margin-top: 24px;
+      width: 150px;
     }
 
     .text-add > p > svg {
@@ -63,6 +64,16 @@ export class ItemPage extends LitElement {
       font-family: 'Montserrat';
     }
 
+    .title > span {
+      color: #333;
+      font-size: 12px;
+      font-style: italic;
+      font-weight: normal;
+      text-align: center;
+      text-transform: lowercase;
+      margin-top: 8px;
+    }
+
     .list {
       display: flex;
       flex-direction: column;
@@ -96,6 +107,37 @@ export class ItemPage extends LitElement {
       padding: 8px;
 
     }
+
+    .row  input {
+      font-family: 'Montserrat';
+      font-size: 16px;
+      border: 0px;
+      padding: 0px;
+      outline: none;
+      border-bottom: 1px solid #d4d4d4;
+      padding-bottom: 4px;
+    }
+
+    .list > .row > div > .trash {
+      color: #d4d4d4;
+      cursor: pointer;
+      transition: 100ms all ease-in-out;
+      user-select: none;
+      background: none;
+      color: #333;
+      padding: 4px 0px;
+      margin: auto;
+      margin-left: 0px;
+    }
+
+    .list > .row > div > .trash > svg {
+      transform: scale(1.2);
+      stroke: #333;
+    }
+
+    .list > .row > div > .trash:hover svg {
+      stroke: #F25757;
+    }
   `
 
   constructor () {
@@ -112,7 +154,9 @@ export class ItemPage extends LitElement {
     if (this.loading == true) return
     return html `
 
-      <h5 class="title">Insira os items que deseja comparar!</h5>
+      <h5 class="title">Insira os items que deseja comparar!<br>
+        <span>(Caso de duvida sobre os valores a inserir veja o botao de ajuda!)</span>
+      </h5>
 
 
       <div class="list">
@@ -139,16 +183,18 @@ export class ItemPage extends LitElement {
               <span>${criteria.name}</span>
               `
             })}
+            <span>Apagar</span>
           </div>
 
           <div>
-            <input type="text" row="${idx}" column="${0}" type="text" @change=${this.__change}/>
+            <input placeholder="Ex: Parque Tecnologico..." type="text" row="${idx}" column="${0}" type="text" @change=${this.__change}/>
             ${this.wizard.criteria.map ((criteria, column_i) => {
               column_i = column_i + 1
               return html `
                 <input .value=${this.wizard.items[idx][column_i]} row="${idx}" column="${column_i}" type="number" @change=${this.__change} />
               `
             })}
+            <span @click=${this.__remove} index="${idx}" class="trash"><svg width="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg></span>
           </div>
         </div>
       `
@@ -167,6 +213,13 @@ export class ItemPage extends LitElement {
     this.requestUpdate()
   }
 
+  __remove (e) {
+    if (!e.currentTarget) return
+    const index = Number(e.currentTarget.getAttribute('index'))
+    this.wizard.items = this.wizard.items.filter((_, idx) => index != idx)
+    this.requestUpdate()
+  }
+
   __change (e) {
     if (!e.currentTarget) return
     const row = Number(e.currentTarget.getAttribute('row'))
@@ -177,8 +230,6 @@ export class ItemPage extends LitElement {
     } else {
       this.wizard.items[row][column] = Number(e.currentTarget.value)
     }
-
-    console.log(this.wizard.items)
   }
 
   validate () {
@@ -227,8 +278,6 @@ export class ItemPage extends LitElement {
     })
     this.wizard.items = tempMatrix
 
-
-    console.log(this.wizard.items)
     this.requestUpdate()
   }
 }
