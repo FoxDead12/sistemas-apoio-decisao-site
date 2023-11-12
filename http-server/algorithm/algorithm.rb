@@ -60,25 +60,71 @@ class Algorithm < Base
       end
       line_headers_execl << 'Total'
 
-      workbook = Axlsx::Package.new
-      worksheet = workbook.workbook.add_worksheet(name: 'Sheet1')
-
-      # Add data to the worksheet
-      header_style = workbook.workbook.styles.add_style(bg_color: 'FF0000', fg_color: 'FFFFFF', b: true)
-      worksheet.add_row line_headers_execl, style: header_style
-
-
-      matrizJuz.each do |row|
-        sum_total = row[1..].sum()
-        row[row.length] = sum_total
-        worksheet.add_row row
-      end
-
-      # Save the workbook
-      name_file = 'matriz_julgamentos_' + Time.now.strftime('%Y-%m-%d %H:%M:%S.%L').gsub!(' ', '__')
-      workbook.serialize("../tmp/#{name_file}.xlsx")
+      name_file = self.generate_excel(line_headers_execl, matrizJuz)
 
       return {file: name_file + '.xlsx'}.to_json
     end)
   end
+
+  def generate_excel (line_headers_execl, matrizJuz)
+
+    workbook = Axlsx::Package.new
+    worksheet = workbook.workbook.add_worksheet(name: 'Sheet1')
+
+    # Add data to the worksheet
+    header_style = workbook.workbook.styles.add_style(
+      bg_color: '0059ff',
+      fg_color: 'FFFFFF',
+      alignment: { horizontal: :center, vertical: :center },
+      sz: 12
+    )
+    worksheet.add_row line_headers_execl, style: header_style
+
+    matrizJuz.each do |row|
+      sum_total = row[1..].sum()
+      row[row.length] = sum_total
+      worksheet.add_row row
+    end
+
+    # Save the workbook
+    name_file = 'matriz_julgamentos_' + Time.now.strftime('%Y-%m-%d %H:%M:%S.%L').gsub!(' ', '__')
+    workbook.serialize("../tmp/#{name_file}.xlsx")
+
+    workbook = Axlsx::Package.new
+    worksheet = workbook.workbook.add_worksheet(name: 'Sheet1')
+
+    return name_file
+  end
 end
+
+
+# require 'axlsx'
+
+# # Create a new workbook and worksheet
+# workbook = Axlsx::Package.new
+# worksheet = workbook.workbook.add_worksheet(name: 'Sheet1')
+
+# # Define a custom style with padding
+# padding_style = workbook.workbook.styles.add_style(
+#   alignment: { horizontal: :center, vertical: :center },
+#   border: { style: :thin, color: '000000' },
+#   padding: { left: 5, right: 5, top: 5, bottom: 5 }
+# )
+
+# # Add a cell with the custom style
+# worksheet.add_cell('Hello, World!', style: padding_style)
+
+# # Save the workbook
+# workbook.serialize('output.xlsx')
+
+# require 'axlsx'
+
+# # Create a new workbook and worksheet
+# workbook = Axlsx::Package.new
+# worksheet = workbook.workbook.add_worksheet(name: 'Sheet1')
+
+# # Set the height of a specific row
+# worksheet.row_height = 30 # Set the height to 30 points
+
+# # Save the workbook
+# workbook.serialize('output.xlsx')
