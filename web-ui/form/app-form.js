@@ -31,7 +31,7 @@ export class AppForm extends LitElement {
       height: 550px;
       box-shadow: 0 2px 50px rgba(50, 40, 85, 0.2);
       overflow: hidden;
-      border-radius: 5px 0px 5px 5px;
+      border-radius: 5px;
       display: grid;
       grid-auto-rows: auto 1fr 55px;
     }
@@ -44,6 +44,16 @@ export class AppForm extends LitElement {
       padding: 12px;
       background: var(--primary-color);
       box-shadow: 0 2px 5px rgba(50, 40, 85, 0.2);
+    }
+
+    @media only screen and (max-width: 800px) {
+      .form {
+        width: 90%;
+      }
+
+      .header {
+        justify-content: space-between;
+      }
     }
 
     .header > li {
@@ -361,6 +371,23 @@ export class AppForm extends LitElement {
 
     .info-button > svg {
       stroke: white;
+    }
+
+    @media only screen and (max-width: 800px) {
+      .success-container > h5 {
+        font-size: 28px;
+        text-align: center;
+      }
+
+      .success-container > p {
+        text-align: left;
+        padding: 12px;
+      }
+
+      .success-container > p > span {
+        font-size: 11px;
+        font-style: italic;
+      }
     }
   `
 

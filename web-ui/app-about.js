@@ -126,8 +126,6 @@ export class AppAbout extends LitElement {
     }
 
     @media only screen and (max-width: 520px) {
-
-
       .sub-title {
         margin: 0px;
         padding: 0px;

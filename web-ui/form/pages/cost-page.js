@@ -61,6 +61,30 @@ export class CostPage extends LitElement {
       border-bottom: 1px solid #d4d4d4;
       padding-bottom: 4px;
     }
+
+    @media only screen and (max-width: 800px) {
+      .title {
+        font-size: 14px;
+        margin-bottom: 18px;
+      }
+
+      .title > span {
+        font-size: 12px;
+        margin-top: 12px;
+      }
+
+      .row > span {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .row > input {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
   `
 
   constructor () {
