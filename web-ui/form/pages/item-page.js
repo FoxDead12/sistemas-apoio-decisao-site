@@ -93,7 +93,7 @@ export class ItemPage extends LitElement {
     .list > .row > div {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 12px;
     }
 
     .list > .row > div > span {
@@ -137,6 +137,35 @@ export class ItemPage extends LitElement {
 
     .list > .row > div > .trash:hover svg {
       stroke: #F25757;
+    }
+
+    @media only screen and (max-width: 800px) {
+      .title {
+        font-size: 14px;
+      }
+
+      .title > span {
+        font-size: 12px;
+        margin-top: 12px;
+      }
+
+      .list > .row > div > span {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .list > .row {
+        display: grid;
+        grid-template-columns: auto 50%;
+        gap: 15px;
+      }
+
+      .row > input {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
     }
   `
 

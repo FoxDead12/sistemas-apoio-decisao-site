@@ -115,6 +115,22 @@ export class CriteriaPage extends LitElement {
     .row > .trash:hover > svg {
       color: #F25757;
     }
+
+    @media only screen and (max-width: 800px) {
+      .header {
+        grid-template-columns: 80% auto;
+      }
+
+      .header > h5 {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .row {
+        grid-template-columns: 80% auto;
+      }
+    }
   `
 
   constructor () {
