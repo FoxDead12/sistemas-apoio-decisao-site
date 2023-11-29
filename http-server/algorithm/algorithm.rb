@@ -88,7 +88,7 @@ class Algorithm < Base
 
     # Save the workbook
     name_file = 'matriz_julgamentos_' + Time.now.strftime('%Y-%m-%d %H:%M:%S.%L').gsub!(' ', '__')
-    workbook.serialize("../tmp/#{name_file}.xlsx")
+    workbook.serialize("/tmp/#{name_file}.xlsx")
 
     workbook = Axlsx::Package.new
     worksheet = workbook.workbook.add_worksheet(name: 'Sheet1')
@@ -96,35 +96,3 @@ class Algorithm < Base
     return name_file
   end
 end
-
-
-# require 'axlsx'
-
-# # Create a new workbook and worksheet
-# workbook = Axlsx::Package.new
-# worksheet = workbook.workbook.add_worksheet(name: 'Sheet1')
-
-# # Define a custom style with padding
-# padding_style = workbook.workbook.styles.add_style(
-#   alignment: { horizontal: :center, vertical: :center },
-#   border: { style: :thin, color: '000000' },
-#   padding: { left: 5, right: 5, top: 5, bottom: 5 }
-# )
-
-# # Add a cell with the custom style
-# worksheet.add_cell('Hello, World!', style: padding_style)
-
-# # Save the workbook
-# workbook.serialize('output.xlsx')
-
-# require 'axlsx'
-
-# # Create a new workbook and worksheet
-# workbook = Axlsx::Package.new
-# worksheet = workbook.workbook.add_worksheet(name: 'Sheet1')
-
-# # Set the height of a specific row
-# worksheet.row_height = 30 # Set the height to 30 points
-
-# # Save the workbook
-# workbook.serialize('output.xlsx')

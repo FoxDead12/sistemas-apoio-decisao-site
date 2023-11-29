@@ -78,8 +78,8 @@ class Base < Sinatra::Base
     end
   end
 
-  def validateUser ()
-    token = @data_request[:token]
+  def validateUser (token_income = nil)
+    token = @data_request[:token] ? @data_request[:token] : token_income
     if (token.nil?)
       raise Exception.new "Token invalido!"
     end

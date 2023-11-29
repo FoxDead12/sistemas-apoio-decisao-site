@@ -5,7 +5,7 @@ require_relative 'auth/login.rb'
 require_relative 'auth/register.rb'
 require_relative 'auth/validate.rb'
 require_relative 'algorithm/algorithm.rb'
-
+require_relative 'file/file.rb'
 
 # SERVER CONFIGS
 set :port, 3001
@@ -24,12 +24,7 @@ use Validate
 use Login
 use Register
 use Algorithm
-
-get '/excel/:name' do
-  # TODO, BLOCK OU FROM tmp FILE
-  name = params[:name]
-  send_file "../tmp/#{name}", :filename => name, :type => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', disposition: 'attachment'
-end
+use FileDownload
 
 get '/*' do
   File.read(File.join('../dist', 'index.html'))
