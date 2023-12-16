@@ -6,6 +6,7 @@ require_relative 'auth/register.rb'
 require_relative 'auth/validate.rb'
 require_relative 'algorithm/algorithm.rb'
 require_relative 'file/file.rb'
+require_relative 'data.rb'
 
 # SERVER CONFIGS
 set :port, 3001
@@ -25,6 +26,7 @@ use Login
 use Register
 use Algorithm
 use FileDownload
+use GetData
 
 get '/*' do
   File.read(File.join('../dist', 'index.html'))

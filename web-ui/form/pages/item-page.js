@@ -5,7 +5,8 @@ export class ItemPage extends LitElement {
 
   static properties = {
     loading: { type: Boolean },
-    wizard: { type: Object }
+    wizard: { type: Object },
+    dataDB: { type: Object }
   }
 
   static styles = css `
@@ -181,8 +182,8 @@ export class ItemPage extends LitElement {
 
   render () {
     if (this.loading == true) return
-    return html `
 
+    return html `
       <h5 class="title">Insira os items que deseja comparar!<br>
         <span>(Caso de duvida sobre os valores a inserir veja o botao de ajuda!)</span>
       </h5>
@@ -202,12 +203,30 @@ export class ItemPage extends LitElement {
   }
 
   __renderItems () {
-    return repeat (this.wizard.items, (item) => item.name, (item, idx) => {
+
+    if (this.dataDB) {
+      let parks_data = []
+
+      this.dataDB.parks_params.map (item => {
+        const id = item.id - 1
+
+        if (!parks_data[id]) {
+          parks_data[id] = []
+          parks_data[id].push(item.park)
+        }
+
+        parks_data[id].push(Number(item.value))
+      })
+
+      this.wizard.items = parks_data
+    }
+
+    return repeat (this.wizard.items, (item,idx) => idx, (item, idx) => {
       return html `
         <div class="row">
           <div>
             <span>Nome</span>
-            ${this.wizard.criteria.map (criteria => {
+            ${this.wizard.criteria.map ((criteria) => {
               return html `
               <span>${criteria.name}</span>
               `
@@ -216,9 +235,10 @@ export class ItemPage extends LitElement {
           </div>
 
           <div>
-            <input placeholder="Ex: Parque Tecnologico..." type="text" row="${idx}" column="${0}" type="text" @change=${this.__change}/>
+            <input placeholder="Ex: Parque Tecnologico..." type="text" row="${idx}" .value=${this.wizard.items[idx][0]} column="${0}" type="text" @change=${this.__change}/>
             ${this.wizard.criteria.map ((criteria, column_i) => {
               column_i = column_i + 1
+
               return html `
                 <input .value=${this.wizard.items[idx][column_i]} row="${idx}" column="${column_i}" type="number" @change=${this.__change} />
               `

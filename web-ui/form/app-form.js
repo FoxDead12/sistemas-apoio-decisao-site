@@ -10,7 +10,9 @@ export class AppForm extends LitElement {
     currentPage: { type: Int8Array },
     loading: { type: Boolean },
     loadingFetch: { type: Boolean },
-    success: { type: Boolean }
+    success: { type: Boolean },
+    dataDB: { type: Object},
+    disableLoadData: { type: Boolean }
   }
 
   static styles = css `
@@ -373,6 +375,42 @@ export class AppForm extends LitElement {
       stroke: white;
     }
 
+    .load-button {
+      position: absolute;
+      left: 68px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--primary-color);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .load-button.disable {
+      background: #d4d4d4;
+    }
+
+    .load-button:before {
+      content: '';
+      position: absolute;
+      left: 4px;
+      width: 32px;
+      height: 32px;
+      border: 2px solid white;
+      border-radius: 50%;
+    }
+
+    .load-button:active {
+      transform: scale(0.9);
+    }
+
+    .load-button > svg {
+      stroke-width: 2;
+    }
+
     @media only screen and (max-width: 800px) {
       .success-container > h5 {
         font-size: 28px;
@@ -408,6 +446,9 @@ export class AppForm extends LitElement {
       'cost-page',
       'item-page'
     ]
+
+    this.dataDB = null
+    this.disableLoadData = false;
   }
 
   async firstUpdated () {
@@ -449,6 +490,13 @@ export class AppForm extends LitElement {
               </div>
               <svg width="44" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
             </span>
+
+            <span class="load-button ${this.disableLoadData ? 'disable' : ''}" @click="${this.__loadDataDB}">
+              <svg width="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+              </svg>
+            </span>
+
 
             <span @click=${this.__leftClick} class="button">
               <svg width="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
@@ -496,6 +544,7 @@ export class AppForm extends LitElement {
     const component = this.pages[this.currentPage]
     const pageElement = document.createElement(component)
     pageElement.wizard = this.wizard
+    pageElement.dataDB = this.dataDB
 
     const container = document.createElement('div')
     container.classList.add('page-container_item')
@@ -507,7 +556,11 @@ export class AppForm extends LitElement {
 
   __leftClick (e) {
     const nextIndex = this.currentPage - 1
-    if (nextIndex < 0) return
+
+    if (nextIndex < 0) {
+      return
+    }
+
     this.currentPage = nextIndex
     this.pagesContainer.scrollLeft = this.currentPage * this.pagesContainer.offsetWidth
     this.__buttonToMove()
@@ -523,6 +576,7 @@ export class AppForm extends LitElement {
         const nextIndex = this.currentPage + 1
         if (nextIndex >= this.pages.length) return // BLOCK
         this.currentPage = nextIndex
+        this.disableLoadData = true
 
         if (this.pagesContainer.children.length <= nextIndex) {
           this.__renderPage()
@@ -605,6 +659,45 @@ export class AppForm extends LitElement {
     }
 
     this.loadingFetch = false;
+  }
+
+  async __loadDataDB () {
+    if (this.disableLoadData) {
+      this.__enableToast('Precisa de reniciar a pagina para correr o butao, apenas pode usa-lo antes de avancar de pagina!')
+      return
+    }
+
+    this.loadingFetch = true;
+
+    try {
+      const result = await fetch(window.app.originUrl + '/data', {
+        headers: {
+          'Authorization': `Bearer ${window.app.sessionData.token}`
+        }
+      })
+
+      const data = await result.json()
+
+      if (result.status !== 200) {
+        throw data.message
+      }
+
+      this.dataDB = data
+      this.__updateChildrens()
+    } catch (e) {
+      console.error(e)
+      this.__enableToast(e)
+    }
+
+    this.loadingFetch = false;
+  }
+
+  __updateChildrens () {
+    for (const element of this.shadowRoot.getElementById('section').children) {
+      const [item] = element.children
+      item.dataDB = this.dataDB
+      item.requestUpdate()
+    }
   }
 }
 window.customElements.define('app-form', AppForm)

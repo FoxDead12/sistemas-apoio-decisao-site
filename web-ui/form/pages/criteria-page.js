@@ -5,7 +5,8 @@ export class CriteriaPage extends LitElement {
 
   static properties = {
     loading: { type: Boolean },
-    wizard: { type: Object }
+    wizard: { type: Object },
+    dataDB: { type: Object }
   }
 
   static styles = css `
@@ -147,6 +148,11 @@ export class CriteriaPage extends LitElement {
 
   render () {
     if (this.loading == true) return
+
+    if (this.dataDB) {
+      this.wizard.criteria = this.dataDB.params
+    }
+
     return html `
       <div class="header">
         <h5>Nome</h5>

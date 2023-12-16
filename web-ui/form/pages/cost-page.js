@@ -5,7 +5,8 @@ export class CostPage extends LitElement {
 
   static properties = {
     loading: { type: Boolean },
-    wizard: { type: Object }
+    wizard: { type: Object },
+    dataDB: { type: Object }
   }
 
   static styles = css `
@@ -94,7 +95,6 @@ export class CostPage extends LitElement {
   }
 
   firstUpdated () {
-
     this.wizard.cost = []
     this.__loadCost ()
     this.loading = false
@@ -102,6 +102,7 @@ export class CostPage extends LitElement {
 
   render () {
     if (this.loading == true) return
+
     return html `
 
       <h5 class="title">Indique o peso do primeiro criterio sobre o segundo!<br>
@@ -146,24 +147,39 @@ export class CostPage extends LitElement {
   }
 
   __loadQuestions () {
-    const tempMatrix = []
-    this.wizard.criteria.map ((_, row_i) => {
-      this.wizard.criteria.map ((_, column_i) => {
-        if (row_i !== column_i) {
-          let id = `${row_i}-${column_i}`
-          let iid = `${column_i}-${row_i}`
+    let tempMatrix = []
 
-          if (!tempMatrix.find(some => some == id)) {
-            if (!tempMatrix.find(some => some == iid)) {
-              tempMatrix.push(id)
+    if (this.dataDB) {
+      tempMatrix = []
+      this.dataDB.weight_params.map (weight => {
+        const id = `${weight.id_compare - 1}-${weight.id_to - 1}-${weight.value}`
+        tempMatrix.push(id)
+      })
+    } else {
+      this.wizard.criteria.map ((_, row_i) => {
+        this.wizard.criteria.map ((_, column_i) => {
+          if (row_i !== column_i) {
+            let id = `${row_i}-${column_i}`
+            let iid = `${column_i}-${row_i}`
+
+            if (!tempMatrix.find(some => some == id)) {
+              if (!tempMatrix.find(some => some == iid)) {
+                tempMatrix.push(id)
+              }
             }
           }
-        }
+        })
       })
-    })
+    }
 
     return repeat(tempMatrix, (item) => item, (item) => {
-      const [row, column] = item.split('-')
+      const [row, column, value] = item.split('-')
+
+      if (value) {
+        this.wizard.cost[row][column] = Number(value)
+        this.wizard.cost[column][row] = parseFloat((1 / Number(value)).toFixed(2));
+      }
+
       return html `
       <div class="row">
         <span>${this.wizard.criteria[row].name}</span>
