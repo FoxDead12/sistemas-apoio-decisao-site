@@ -263,6 +263,11 @@ export class ItemPage extends LitElement {
   }
 
   __remove (e) {
+    if (this.dataDB) {
+      dialog.__enableToast('Nao podes apagar os items que foram carregados!')
+      return
+    }
+
     if (!e.currentTarget) return
     const index = Number(e.currentTarget.getAttribute('index'))
     this.wizard.items = this.wizard.items.filter((_, idx) => index != idx)

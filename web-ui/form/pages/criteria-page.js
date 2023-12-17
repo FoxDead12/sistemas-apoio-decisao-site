@@ -193,6 +193,11 @@ export class CriteriaPage extends LitElement {
   }
 
   __remove (e) {
+    if (this.dataDB) {
+      dialog.__enableToast('Nao podes apagar os criterios que foram carregados!')
+      return
+    }
+
     if (!e.currentTarget) return
     const index = Number(e.currentTarget.getAttribute('index'))
     this.wizard.criteria = this.wizard.criteria.filter((_, idx) => index != idx)

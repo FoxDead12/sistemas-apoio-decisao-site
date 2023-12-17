@@ -436,6 +436,8 @@ export class AppForm extends LitElement {
       window.location.href = '/'; //relative to domain
     }
 
+    window.dialog = this
+
     this.wizard = {}
     this.loading = true
     this.loadingFetch = false;
@@ -683,6 +685,7 @@ export class AppForm extends LitElement {
       }
 
       this.dataDB = data
+
       this.__updateChildrens()
     } catch (e) {
       console.error(e)
@@ -696,7 +699,6 @@ export class AppForm extends LitElement {
     for (const element of this.shadowRoot.getElementById('section').children) {
       const [item] = element.children
       item.dataDB = this.dataDB
-      item.requestUpdate()
     }
   }
 }
